@@ -12,7 +12,7 @@ interface Attempts {
 export default function Stats() {
   const router = useRouter();
   const [attempts, setAttempts] = useState<Attempts>({});
-  const [winner, setWinner] = useState<string | null>(null);
+  const [, setWinner] = useState<string | null>(null);
 
   useEffect(() => {
     const docRef = doc(db, "games", "current");
