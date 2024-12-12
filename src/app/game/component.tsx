@@ -52,7 +52,7 @@ export default function Game() {
   };  
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center h-screen ">
       <h1 className="text-xl font-bold mb-4">Equipo: {team}</h1>
       <div className="mb-4 text-2xl">{code || "******"}</div>
       <div className="grid grid-cols-3 gap-2 mb-4">

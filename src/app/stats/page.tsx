@@ -40,7 +40,7 @@ export default function Stats() {
   }, {} as Record<string, number>);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center h-screen ">
       <h1 className="text-2xl font-bold mb-4">Intentos por equipo</h1>
       <ul className="list-disc">
         {Object.keys(filteredAttempts).map((team) => (
