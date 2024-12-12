@@ -26,7 +26,6 @@ export default function Home() {
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
       const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((difference / (1000 * 60)) % 60);
-      const seconds = Math.floor((difference / 1000) % 60);
 
       setTimeLeft(
         `${days} días<br />${hours} horas, ${minutes} minutos`
