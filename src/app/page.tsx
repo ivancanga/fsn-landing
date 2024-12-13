@@ -23,6 +23,7 @@ export default function Home() {
       <div className="bg-white text-black w-full text-center">
         <h2>17 de enero, 21:30 hs</h2>
         <h3>Especial cumpleaños 29</h3>
+        <a href="https://www.instagram.com/fiestasinnombre/">fiestasinnombre</a>
       </div>
       <Diagonal />
     </div>

@@ -30,3 +30,13 @@ h2 {
   padding: 24px;
   margin-top: -8px;
 }
+
+h3 {
+  font-size: 24px;
+}
+
+a{
+  font-size: 24px;
+  text-decoration: underline;
+  color: blue;
+}
