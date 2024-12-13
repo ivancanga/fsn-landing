@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const Logo = styled.div`
   h1 {
@@ -12,7 +12,7 @@ export const Logo = styled.div`
     white-space: nowrap; /* Evita cortes de línea */
 
     /* Animación de parpadeo rápido */
-    animation: quick-blink 3s infinite; /* Parpadeo cada 3 segundos */
+    animation: quick-blink 2s infinite; /* Parpadeo cada 3 segundos */
   }
 
   /* Animación para parpadeo rápido */
@@ -63,4 +63,48 @@ export const DiagonalInverted = styled.div`
   margin-top: -10px; /* Ajuste para eliminar espacios */
 `;
 
+// Animación para el parpadeo del láser
+const blink = keyframes`
+  0%, 49.9%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+`;
 
+// Styled component para el láser verde horizontal
+export const Laser = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: limegreen;
+  top: 30%;
+  left: 0;
+  transform: translateY(-50%) rotate(5deg);
+  animation: ${blink} 0.1s infinite;
+  z-index: 10;
+  
+`;
+
+export const Laser2 = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: limegreen;
+  top: 60%;
+  left: 0;
+  transform: translateY(-50%) rotate(-8deg);
+  animation: ${blink} 0.1s infinite;
+  z-index: 10;
+  
+`;
+
+export const DiamondContainer = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
+`;
