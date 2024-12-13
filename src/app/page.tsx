@@ -1,6 +1,6 @@
 "use client";
 
-import { Logo, Diagonal, DiagonalInverted, DiamondContainer, Laser, Laser2 } from "./styled";
+import { Logo, Diagonal, DiagonalInverted, DiamondContainer, Laser, Laser2, ImageContainer } from "./styled";
 import Countdown from "./components/countdown";
 
 export default function Home() {
@@ -12,11 +12,14 @@ export default function Home() {
       <DiagonalInverted />
       <Countdown />
       <Diagonal />
+      <ImageContainer src="/fsn7-web.jpeg" alt="Diamond GIF" className="" />
       <DiamondContainer>
         <Laser />
         <Laser2 />
-        <img src="/diamond.gif" alt="Diamond GIF" className="w-32 h-32" />
+        <img src="/diamond.gif" className="w-32 h-32" />
+
       </DiamondContainer>
+
       <DiagonalInverted />
       <div className="bg-white text-black w-full text-center">
         <h2>17 de enero, 21:30 hs</h2>

@@ -17,10 +17,12 @@ export const Logo = styled.div`
 
   /* Animación para parpadeo rápido */
   @keyframes quick-blink {
-    0%, 98% {
+    0%,
+    98% {
       opacity: 1; /* Visible */
     }
-    98.5%, 99.5% {
+    98.5%,
+    99.5% {
       opacity: 0; /* Invisible por milisegundos */
     }
     100% {
@@ -81,10 +83,9 @@ export const Laser = styled.div`
   background-color: limegreen;
   top: 30%;
   left: 0;
-  transform: translateY(-50%) rotate(5deg);
+  transform: translateY(-50%) rotate(133deg) scale(1.5);
   animation: ${blink} 0.1s infinite;
   z-index: 10;
-  
 `;
 
 export const Laser2 = styled.div`
@@ -97,7 +98,6 @@ export const Laser2 = styled.div`
   transform: translateY(-50%) rotate(-8deg);
   animation: ${blink} 0.1s infinite;
   z-index: 10;
-  
 `;
 
 export const DiamondContainer = styled.div`
@@ -107,4 +107,9 @@ export const DiamondContainer = styled.div`
   align-items: center;
   margin-top: 20px;
   width: 100%;
+`;
+
+export const ImageContainer = styled.img`
+  transform: scale(1.3) rotate(-6deg);
+  filter: blur(1.5px);
 `;
