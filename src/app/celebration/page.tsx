@@ -46,8 +46,8 @@ export default function Celebration() {
     // Prepantalla
     return (
       <div className="flex items-center justify-center h-screen w-full bg-gray-500">
-        <h1 className="text-3xl md:text-5xl font-bold text-white animate-pulse">
-          Código de seguridad correcto...
+        <h1 className="text-[200px] md:text-5xl font-bold text-white animate-pulse">
+          Operador Zero: clave correcta...
         </h1>
       </div>
     );
