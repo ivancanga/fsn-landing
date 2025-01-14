@@ -1,6 +1,6 @@
 "use client";
 
-import { Logo, Diagonal, DiagonalInverted, DiamondContainer, Laser, Laser2, ImageContainer } from "./styled";
+import { Logo, Diagonal, DiagonalInverted, DiamondContainer, Laser, Laser2 } from "./styled";
 import Countdown from "./components/countdown";
 
 export default function Home() {
