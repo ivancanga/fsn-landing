@@ -8,6 +8,7 @@ import ReactConfetti from "react-confetti"; // Importa React-Confetti
 
 export default function Celebration() {
   const [winner, setWinner] = useState<string | null>(null);
+  const [showCelebration, setShowCelebration] = useState<boolean>(false); // Controla si se muestra la pantalla de celebración
   const { width, height } = useWindowSize(); // Obtiene el tamaño de la ventana para el confeti
 
   useEffect(() => {
@@ -24,6 +25,13 @@ export default function Celebration() {
     };
 
     fetchWinner();
+
+    // Muestra la prepantalla por 5 segundos, luego pasa a la pantalla de celebración
+    const timer = setTimeout(() => {
+      setShowCelebration(true);
+    }, 7000);
+
+    return () => clearTimeout(timer); // Limpia el temporizador al desmontar el componente
   }, []);
 
   // Mapeo de colores según el equipo ganador
@@ -33,6 +41,17 @@ export default function Celebration() {
     Azul: "bg-blue-500",
     Amarillo: "bg-yellow-500",
   };
+
+  if (!showCelebration) {
+    // Prepantalla
+    return (
+      <div className="flex items-center justify-center h-screen w-full bg-gray-500">
+        <h1 className="text-3xl md:text-5xl font-bold text-white animate-pulse">
+          Código de seguridad correcto...
+        </h1>
+      </div>
+    );
+  }
 
   return (
     <div
