@@ -12,11 +12,10 @@ export default function Home() {
       <DiagonalInverted />
       <Countdown />
       <Diagonal />
-      <ImageContainer src="/fsn7-web.jpeg" alt="Diamond GIF" className="" />
       <DiamondContainer>
         <Laser />
         <Laser2 />
-        <img src="/diamond.gif" className="w-32 h-32" />
+        <img src="/diamond.gif" className="w-64 h-64" />
       </DiamondContainer>
 
       <DiagonalInverted />

@@ -19,7 +19,7 @@ export default function Stats() {
 
     const unsubscribe = onSnapshot(docRef, (doc) => {
       if (doc.exists()) {
-        const data = doc.data() as Attempts; // Tipado explícito
+        const data = doc.data() as Attempts;
         setAttempts(data);
 
         // Redirigir si hay un ganador
@@ -33,22 +33,40 @@ export default function Stats() {
     return () => unsubscribe();
   }, [router]);
 
-  // Filtra el campo "winner" para no mostrarlo en la lista
-  const filteredAttempts = Object.keys(attempts).reduce((acc, key) => {
-    if (key !== "winner") acc[key] = attempts[key] as number; // Filtra valores numéricos
-    return acc;
-  }, {} as Record<string, number>);
+  const teams = ["Rojo", "Verde", "Azul", "Amarillo"];
+  const teamColors: { [key: string]: string } = {
+    Rojo: "bg-red-500",
+    Verde: "bg-green-500",
+    Azul: "bg-blue-500",
+    Amarillo: "bg-yellow-500",
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen ">
-      <h1 className="text-2xl font-bold mb-4">Intentos por equipo</h1>
-      <ul className="list-disc">
-        {Object.keys(filteredAttempts).map((team) => (
-          <li key={team}>
-            {team}: {filteredAttempts[team]}
-          </li>
+    <div className="relative h-screen w-screen">
+      <div className="absolute top-4 w-full text-center text-3xl font-bold text-black bg-white bg-opacity-80 px-4 py-2 rounded-md shadow-md z-50">
+        Intentos por equipo
+      </div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+        <img
+          src="/diamond.gif"
+          alt="Diamond"
+          className="w-40 h-40 md:w-50 md:h-50"
+        />
+      </div>
+      <div className="grid grid-cols-2 grid-rows-2 h-full w-full">
+        {teams.map((team) => (
+          <div
+            key={team}
+            className={`flex items-center justify-center ${
+              teamColors[team] || "bg-gray-500"
+            } transition-transform duration-300 transform`}
+          >
+            <div className="text-9xl font-bold text-white p-4 animate-pulse">
+              {attempts[team] ?? 0}
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

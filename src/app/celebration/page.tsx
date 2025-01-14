@@ -23,14 +23,31 @@ export default function Celebration() {
     fetchWinner();
   }, []);
 
+  // Mapeo de colores según el equipo ganador
+  const teamColors: { [key: string]: string } = {
+    Rojo: "bg-red-500",
+    Verde: "bg-green-500",
+    Azul: "bg-blue-500",
+    Amarillo: "bg-yellow-500",
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-green-100">
+    <div
+      className={`flex flex-col items-center justify-center h-screen ${
+        winner ? teamColors[winner] || "bg-gray-500" : "bg-gray-100"
+      }`}
+    >
       {winner ? (
         <>
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-8xl font-bold text-white mb-4">
             ¡Felicidades al equipo {winner}! 🎉
           </h1>
-          <p className="text-xl">¡Gracias a todos por participar!</p>
+          <p className="text-4xl text-white mb-16">¡Gracias a todos por participar!</p>
+          <img
+            src="/diamond.gif"
+            alt="Diamond"
+            className="w-80 h-80 animate-bounce"
+          />
         </>
       ) : (
         <h1 className="text-2xl font-bold mb-4">Cargando...</h1>

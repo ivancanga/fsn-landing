@@ -14,16 +14,15 @@ const Countdown = () => {
     router.push(`/game?team=${team}`);
   };
 
-  // Actualiza el contador cada segundo
   useEffect(() => {
-    const targetDate = new Date("2025-01-17T21:30:00"); // Fecha objetivo
+    const targetDate = new Date("2025-01-17T21:30:00"); // Fecha
 
     const updateCountdown = () => {
       const now = new Date();
       const difference = targetDate.getTime() - now.getTime();
 
       if (difference <= 0) {
-        setHasEventStarted(true); // Marca que el evento ya comenzó
+        setHasEventStarted(true);
         setTimeLeft("¡El evento ha comenzado!");
         return;
       }
