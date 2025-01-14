@@ -43,14 +43,14 @@ export default function Stats() {
 
   return (
     <div className="relative h-screen w-screen">
-      <div className="absolute top-4 w-full text-center text-3xl font-bold text-black bg-white bg-opacity-80 px-4 py-2 rounded-md shadow-md z-50">
+      <div className="absolute top-4 w-full text-center text-6xl font-bold text-black bg-white bg-opacity-80 px-4 py-2 rounded-md shadow-md z-50">
         Intentos por equipo
       </div>
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
         <img
           src="/diamond.gif"
           alt="Diamond"
-          className="w-40 h-40 md:w-50 md:h-50"
+          className="w-120 h-120 md:w-120 md:h-120"
         />
       </div>
       <div className="grid grid-cols-2 grid-rows-2 h-full w-full">
@@ -61,7 +61,7 @@ export default function Stats() {
               teamColors[team] || "bg-gray-500"
             } transition-transform duration-300 transform`}
           >
-            <div className="text-9xl font-bold text-white p-4 animate-pulse">
+            <div className="text-[200px] font-bold text-white p-4 animate-pulse">
               {attempts[team] ?? 0}
             </div>
           </div>
