@@ -6,7 +6,7 @@ import { db } from "../../utils/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { PasswordContaianer } from "../styled";
 
-const secretCode = "123750"; // Código secreto que los equipos deben adivinar
+const secretCode = "978750"; // Código secreto que los equipos deben adivinar
 
 export default function Game() {
   const searchParams = useSearchParams();
