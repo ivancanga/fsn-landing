@@ -5,13 +5,14 @@ import { useState } from "react";
 import { db } from "../../utils/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { PasswordContaianer } from "../styled";
+import styles from "./game-bloody.module.css"; // 👈 CSS module
 
-const secretCode = "978750"; // Código secreto que los equipos deben adivinar
+const secretCode = "978750";
 
 export default function Game() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const team = searchParams.get("team"); // Obtén el equipo de los parámetros de búsqueda
+  const team = searchParams.get("team");
   const [code, setCode] = useState("");
 
   const handleKeyPress = (key: string) => {
@@ -23,15 +24,11 @@ export default function Game() {
       alert("Debes ingresar un código de 6 dígitos.");
       return;
     }
-
     const docRef = doc(db, "games", "current");
 
     if (code === secretCode) {
       try {
-        // Actualiza el campo `winner` en Firestore con el equipo ganador
         await updateDoc(docRef, { winner: team });
-
-        // Redirige a la página de celebración
         router.push("/celebration");
       } catch (error) {
         console.error("Error al actualizar el ganador:", error);
@@ -39,10 +36,7 @@ export default function Game() {
       }
     } else {
       try {
-        // Incrementa los intentos para el equipo
-        await updateDoc(docRef, {
-          [`${team}`]: increment(1),
-        });
+        await updateDoc(docRef, { [`${team}`]: increment(1) });
         alert(`Intento incorrecto: ${code}`);
       } catch (error) {
         console.error("Error al actualizar los intentos:", error);
@@ -53,53 +47,60 @@ export default function Game() {
   };
 
   type TeamType = "rojo" | "verde" | "azul" | "amarillo";
-
   const teamColors: Record<TeamType, string> = {
-    rojo: "bg-red-500",
-    verde: "bg-green-500",
-    azul: "bg-blue-500",
-    amarillo: "bg-yellow-500",
+    rojo: "bg-red-700",
+    verde: "bg-green-700",
+    azul: "bg-blue-700",
+    amarillo: "bg-yellow-600",
   };
 
   const teamColorClass =
     team && teamColors[team.toLowerCase() as TeamType]
       ? teamColors[team.toLowerCase() as TeamType]
-      : "bg-gray-500";
+      : "bg-gray-700";
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen ">
-      <h1
-        className={`text-3xl font-bold mb-8 p-4 text-white rounded ${teamColorClass} uppercase w-80 text-center`}
-      >
+    <div className={`flex flex-col items-center justify-center h-screen ${styles.wrapper}`}>
+      <h1 className={`text-3xl font-bold mb-8 p-4 text-white rounded uppercase w-80 text-center ${styles.title} ${teamColorClass}`}>
         Equipo {team}
       </h1>
-      <PasswordContaianer className="mb-4">
+
+      <PasswordContaianer className={`mb-6 ${styles.password}`}>
         {code || "******"}
       </PasswordContaianer>
-      <div className="grid grid-cols-3 gap-2 mb-4">
+
+      <div className={`grid grid-cols-3 gap-3 mb-4 w-[22rem] max-w-[90vw] ${styles.keypad}`}>
         {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (
           <button
             key={num}
-            className="p-4 bg-white text-black text-8xl rounded-lg font-black digital-key"
+            className={`${styles.key} ${styles.num}`}
             onClick={() => handleKeyPress(num.toString())}
           >
             {num}
           </button>
         ))}
+
+        {/* Clear */}
         <button
-          className="p-4 bg-red-500 text-black rounded-lg digital-key"
+          className={`${styles.key} ${styles.clear}`}
+          aria-label="Borrar"
           onClick={() => setCode("")}
-        ></button>
+        />
+
+        {/* 0 */}
         <button
-          className="p-4 bg-white text-black text-8xl rounded-lg font-black digital-key"
+          className={`${styles.key} ${styles.num}`}
           onClick={() => handleKeyPress("0")}
         >
           0
         </button>
+
+        {/* Submit */}
         <button
-          className="p-4 bg-green-500 text-black rounded-lg digital-key"
+          className={`${styles.key} ${styles.submit}`}
+          aria-label="Enviar"
           onClick={handleSubmit}
-        ></button>
+        />
       </div>
     </div>
   );

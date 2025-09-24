@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FSN 7 - el diamante",
-  description: "fiestasinnombre 7",
+  title: "FSN 8 - El rito",
+  description: "fiestasinnombre 8",
 };
 
 export default function RootLayout({

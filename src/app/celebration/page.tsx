@@ -26,10 +26,10 @@ export default function Celebration() {
 
     fetchWinner();
 
-    // Muestra la prepantalla por 5 segundos, luego pasa a la pantalla de celebración
+    // Muestra la prepantalla por 8 segundos, luego pasa a la pantalla de celebración
     const timer = setTimeout(() => {
       setShowCelebration(true);
-    }, 7000);
+    }, 8000);
 
     return () => clearTimeout(timer); // Limpia el temporizador al desmontar el componente
   }, []);
@@ -47,7 +47,7 @@ export default function Celebration() {
     return (
       <div className="flex items-center justify-center h-screen w-full bg-gray-500">
         <h1 className="text-[200px] md:text-5xl font-bold text-white animate-pulse">
-          Operador Zero: clave correcta...
+          ¡El rito de sangre se ha detenido!...
         </h1>
       </div>
     );
@@ -75,11 +75,7 @@ export default function Celebration() {
           </p>
 
           {/* Imagen del diamante */}
-          <img
-            src="/diamond.gif"
-            alt="Diamond"
-            className="w-40 h-40 md:w-60 md:h-60 lg:w-80 lg:h-80 animate-bounce"
-          />
+          <span className="text-4xl md:text-6xl lg:text-8xl xl:text-[180px] font-bold text-white text-center mb-4">🩸</span>
         </>
       ) : (
         <h1 className="text-2xl font-bold mb-4">Cargando...</h1>

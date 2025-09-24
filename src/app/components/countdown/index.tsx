@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const Countdown = () => {
-  const [timeLeft, setTimeLeft] = useState<string>(""); // Estado del tiempo restante
-  const [hasEventStarted, setHasEventStarted] = useState(false); // Estado para saber si el evento comenzó
-  const teams = ["Rojo", "Verde", "Azul", "Amarillo"]; // Lista de equipos
+  const [timeLeft, setTimeLeft] = useState<string>("");
+  const [hasEventStarted, setHasEventStarted] = useState(false);
+  const teams = ["Rojo", "Verde", "Azul", "Amarillo"];
 
   const router = useRouter();
 
@@ -15,7 +15,7 @@ const Countdown = () => {
   };
 
   useEffect(() => {
-    const targetDate = new Date("2025-01-17T21:30:00"); // Fecha
+    const targetDate = new Date("2025-10-18T21:00:00");
 
     const updateCountdown = () => {
       const now = new Date();
@@ -35,40 +35,44 @@ const Countdown = () => {
     };
 
     const interval = setInterval(updateCountdown, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="bg-white text-black w-full text-center">
+    <div className="text-white w-full text-center">
       {!hasEventStarted ? (
         <h2 dangerouslySetInnerHTML={{ __html: timeLeft }} />
       ) : (
         <>
           <h2 className="text-2xl font-bold mb-6">Seleccioná tu equipo</h2>
+
           <div className="grid grid-cols-2 gap-4">
             {teams.map((team) => (
               <button
                 key={team}
-                className={`p-4 rounded-lg text-white font-bold ${team.toLowerCase()}-bg`}
                 onClick={() => handleTeamSelect(team)}
+                className={`rounded-lg text-white font-bold
+                            text-xl md:text-xl              /* nombres más grandes */
+                            h-36 flex items-center justify-center /* más cuadrados */
+                            shadow-lg ${team.toLowerCase()}-bg`}
               >
                 {team}
               </button>
             ))}
           </div>
+
           <style jsx>{`
             .rojo-bg {
-              background-color: #f87171;
+              background-color: rgba(248, 113, 113, 0.8); /* #f87171 */
             }
             .verde-bg {
-              background-color: #34d399;
+              background-color: rgba(52, 211, 153, 0.8); /* #34d399 */
             }
             .azul-bg {
-              background-color: #60a5fa;
+              background-color: rgba(96, 165, 250, 0.8); /* #60a5fa */
             }
             .amarillo-bg {
-              background-color: #facc15;
+              background-color: rgba(250, 204, 21, 0.8); /* #facc15 */
             }
           `}</style>
         </>
