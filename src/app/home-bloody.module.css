@@ -1,0 +1,36 @@
+.wrapper {
+    position: relative;
+    background: #000;
+    overflow: hidden;
+  }
+  
+  /* Imagen de fondo con animación */
+  .bgAnimated {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .bgAnimated img {
+    width: 80%;
+    height: auto;
+    object-fit: contain;
+    animation: bleedFlicker 4.6s infinite;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 18px rgba(255, 0, 0, 0.35));
+  }
+  
+  @keyframes bleedFlicker {
+    0%, 18%, 22%, 25%, 60%, 100% {
+      opacity: 0.95;
+      filter: drop-shadow(0 0 18px rgba(255,0,0,.35));
+    }
+    19%, 23%, 55% {
+      opacity: 0.55;
+      filter: drop-shadow(0 0 8px rgba(255,0,0,.18));
+    }
+  }
+  
