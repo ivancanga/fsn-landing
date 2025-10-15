@@ -188,7 +188,7 @@ export default function VotePage() {
 
       <main className={styles.content}>
         <p className={styles.intro}>
-          Elegi a un participante para apoyarlo con su outfit/makeup. El voto se guarda solamenteen este dispositivo y podras cambiarlo si cambias de idea antes de que voten todos.
+          Elegí a un participante para apoyarlo con su outfit/makeup. Podrás cambiar tu voto antes de que cierre la votación. Evitá elegir solo porque es de tu equipo, votá por el que más de guste y reconozcamos su esfuerzo 😉. El ganador se lleva 5 puntos al equipo.
         </p>
 
         <div className={styles.grid}>
