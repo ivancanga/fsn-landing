@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "../../utils/firebase";
@@ -50,7 +51,7 @@ export default function Stats() {
 
       {/* Imagen central con parpadeo */}
       <div className={`${styles.centerImgWrap}`}>
-        <img src="/elritobg.png" alt="El rito de sangre" className={styles.centerImg} />
+        <Image src="/elritobg.png" alt="El rito de sangre" width={1200} height={800} className={styles.centerImg} priority />
       </div>
 
       {/* Cuadrantes */}
