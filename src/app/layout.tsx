@@ -4,6 +4,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "FSN 8 - El rito",
   description: "fiestasinnombre 8",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
