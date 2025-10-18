@@ -7,7 +7,7 @@ import { doc, updateDoc, increment } from "firebase/firestore";
 import { PasswordContaianer } from "../styled";
 import styles from "./game-bloody.module.css"; // 👈 CSS module
 
-const secretCode = "978750";
+const secretCode = "890782";
 
 export default function Game() {
   const searchParams = useSearchParams();
