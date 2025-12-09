@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../utils/firebase";
@@ -90,10 +91,13 @@ export default function TeamsPage() {
                         >
                           <div className="h-4/5 w-full overflow-hidden">
                             {player.photo ? (
-                              <img
+                              <Image
                                 src={player.photo}
                                 alt={player.name}
-                                className="w-full h-full object-cover"
+                                fill
+                                sizes="160px"
+                                className="object-cover"
+                                unoptimized
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-xs text-gray-300">

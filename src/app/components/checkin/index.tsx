@@ -3,7 +3,8 @@
 import Image from "next/image";
 import React, { useMemo, useState } from "react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../../../utils/firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { db, storage } from "../../../utils/firebase";
 
 const teamColors = {
   Rojo: "#ef4444",
@@ -17,27 +18,31 @@ const CheckIn = () => {
   const [playerName, setPlayerName] = useState("");
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
-  const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const canRegister = !!playerName.trim() && !!selectedTeam && !!photoDataUrl;
+  const canRegister = !!playerName.trim() && !!selectedTeam && !!photoFile;
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      setPhotoFile(null);
+      setPhotoPreview(null);
+      return;
+    }
 
     const reader = new FileReader();
     reader.onloadend = () => {
       const result = reader.result;
       if (typeof result === "string") {
         setPhotoPreview(result);
-        setPhotoDataUrl(result);
       }
     };
     reader.readAsDataURL(file);
+    setPhotoFile(file);
   };
 
   const handleSpin = () => {
@@ -64,10 +69,20 @@ const CheckIn = () => {
     setStatusMessage(null);
 
     try {
+      const safeName = playerName.trim().replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 40) || "jugador";
+      let photoUrl: string | null = null;
+
+      if (photoFile) {
+        const teamPath = selectedTeam ?? "sinEquipo";
+        const storageRef = ref(storage, `checkins/${teamPath}/${Date.now()}_${safeName}.jpg`);
+        const uploadResult = await uploadBytes(storageRef, photoFile);
+        photoUrl = await getDownloadURL(uploadResult.ref);
+      }
+
       await addDoc(collection(db, "checkins"), {
         name: playerName.trim(),
         team: selectedTeam,
-        photo: photoDataUrl,
+        photo: photoUrl,
         createdAt: serverTimestamp(),
       });
 
@@ -75,7 +90,7 @@ const CheckIn = () => {
       setPlayerName("");
       setSelectedTeam(null);
       setPhotoPreview(null);
-      setPhotoDataUrl(null);
+      setPhotoFile(null);
     } catch (error) {
       console.error("Error al registrar check-in", error);
       setStatusMessage("No pudimos registrar tu check-in. Reintentá en un rato.");
