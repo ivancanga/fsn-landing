@@ -6,7 +6,7 @@ export const Logo = styled.div`
     height: 120px;
     font-size: 16vh; /* Tamaño del texto */
     font-weight: 900;
-    color:rgb(255, 255, 255); /* Texto blanco */
+    color: #FFE478; /* Texto blanco */
     transform: translateY(-20%); /* Ajuste e inclinación del texto */
     margin: 0;
     line-height: 160px;

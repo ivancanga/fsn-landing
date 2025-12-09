@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FSN 8 - El rito",
-  description: "fiestasinnombre 8",
+  title: "FSN 9 - summer edition",
+  description: "fiestasinnombre 9",
   icons: {
     icon: "/icon.svg",
     shortcut: "/icon.svg",

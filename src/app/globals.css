@@ -21,6 +21,11 @@
 body {
   color: var(--foreground);
   background-color: var(--background) !important; /* Sobrescribe cualquier otro color */
+  background-image: url('/fondo.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   font-family: 'Darker Grotesque', sans-serif;
 }
 
@@ -35,10 +40,21 @@ h3 {
   font-size: 24px;
 }
 
+h4 {
+    text-align: center;
+    font-size: 24px; /* Tamaño del texto */
+    font-weight: 900;
+    color: #fff2bf;
+    margin: 0;
+    /* Animación de parpadeo rápido */
+    animation: quick-blink 2s infinite; /* Parpadeo cada 3 segundos */
+  }
+
+
 a{
-  font-size: 24px;
+  font-size: 32px;
   text-decoration: underline;
-  color: rgb(255, 0, 0);
+  color: rgb(194, 210, 252);
   padding: 60px;
 }
 
@@ -51,4 +67,3 @@ a{
   transform: scale(0.95);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 0px 2px rgba(0, 0, 0, 0.06);
 }
-
