@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useMemo, useState } from "react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../utils/firebase";
@@ -147,7 +148,16 @@ const CheckIn = () => {
           {photoPreview && (
             <div className="mt-4">
               <p className="text-xs text-gray-400">Vista previa</p>
-              <img src={photoPreview} alt="Foto de check-in" className="mt-1 rounded-2xl border border-white/30 w-full object-cover max-h-60" />
+              <div className="relative mt-1 rounded-2xl border border-white/30 w-full max-h-60 overflow-hidden bg-black/40 aspect-[3/4]">
+                <Image
+                  src={photoPreview}
+                  alt="Foto de check-in"
+                  fill
+                  sizes="(max-width: 640px) 100vw, 400px"
+                  className="object-cover"
+                  unoptimized
+                />
+              </div>
             </div>
           )}
         </div>
@@ -171,3 +181,4 @@ const CheckIn = () => {
 };
 
 export default CheckIn;
+

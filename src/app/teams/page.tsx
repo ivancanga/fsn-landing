@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../utils/firebase";
 import { Logo } from "../styled";
@@ -64,10 +64,6 @@ export default function TeamsPage() {
 
     fetchCheckins();
   }, []);
-
-  const totalPlayers = useMemo(() => {
-    return Object.values(checkins).reduce((sum, list) => sum + list.length, 0);
-  }, [checkins]);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-black to-zinc-900 text-white px-6 py-0">
