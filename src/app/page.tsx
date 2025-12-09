@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Logo } from "./styled";
 import Countdown from "./components/countdown";
 
@@ -22,8 +23,13 @@ export default function Home() {
             priority
           />
           <Countdown />
-          
         </div>
+        <Link
+          href="/checkin"
+          className="mt-10 px-6 py-3 rounded-full bg-gradient-to-r from-[#f97316] to-[#facc15] text-black font-bold text-lg shadow-lg shadow-black/40"
+        >
+          Hacer check-in
+        </Link>
       </div>
 
       <div className="text-white w-full text-center mt-6">
