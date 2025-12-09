@@ -1,15 +1,15 @@
 import styled from "styled-components";
 
-export const Logo = styled.div`
+export const Logo = styled.div<{ size?: 'small' | 'large', color?: string }>`
   h1 {
     text-align: center;
-    height: 120px;
-    font-size: 16vh; /* Tamaño del texto */
+    height: ${props => props.size === 'small' ? '60px' : '120px'};
+    font-size: ${props => props.size === 'small' ? '8vh' : '16vh'}; /* Tamaño del texto */
     font-weight: 900;
-    color: #FFE478; /* Texto blanco */
+    color: ${props => props.color || '#FFE478'}; /* Texto amarillo por defecto */
     transform: translateY(-20%); /* Ajuste e inclinación del texto */
     margin: 0;
-    line-height: 160px;
+    line-height: ${props => props.size === 'small' ? '80px' : '160px'};
     white-space: nowrap; /* Evita cortes de línea */
 
     /* Animación de parpadeo rápido */

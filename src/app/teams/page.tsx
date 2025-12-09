@@ -8,11 +8,15 @@ import { Logo } from "../styled";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 
-type CheckInData = {
-  id: string;
+type Player = {
   name: string;
-  team: string;
   photo?: string;
+  createdAt?: any;
+};
+
+type TeamData = {
+  id: string;
+  players: Player[];
 };
 
 const teamsMeta = [
@@ -22,7 +26,7 @@ const teamsMeta = [
   { id: "Amarillo", label: "Equipo Amarillo", gradient: "from-[#92400e] via-[#f59e0b] to-[#fde68a]" },
 ];
 
-const TeamCarousel = ({ players }: { players: CheckInData[] }) => {
+const TeamCarousel = ({ players }: { players: Player[] }) => {
   const autoplayPlugin = useMemo(() => {
     return players.length >= 2 ? Autoplay({ delay: 2300, stopOnInteraction: false }) : undefined;
   }, [players.length]);
@@ -39,7 +43,7 @@ const TeamCarousel = ({ players }: { players: CheckInData[] }) => {
   if (players.length === 0) {
     return (
       <div className="h-full flex items-center justify-center rounded-3xl border border-white/20 bg-black/40">
-        <span className="text-sm text-gray-300">Esperando jugadores...</span>
+        <span className="text-sm text-gray-300">Aún no hay jugadores...</span>
       </div>
     );
   }
@@ -75,11 +79,11 @@ const TeamCarousel = ({ players }: { players: CheckInData[] }) => {
 
   return (
     <div className="h-full overflow-hidden" ref={emblaRef}>
-      <div className="flex h-full gap-3">
-        {players.map((player) => (
+      <div className="flex h-full">
+        {players.map((player, index) => (
           <article
-            key={player.id}
-            className="flex-shrink-0 w-[11rem] h-full rounded-3xl border border-white/30 bg-black/60 shadow-xl overflow-hidden flex flex-col"
+            key={`${player.name}-${index}`}
+            className="flex-shrink-0 w-[11rem] h-full rounded-3xl border border-white/30 bg-black/60 shadow-xl overflow-hidden flex flex-col mr-3"
           >
             <div className="relative h-4/5 w-full overflow-hidden">
               {player.photo ? (
@@ -108,64 +112,77 @@ const TeamCarousel = ({ players }: { players: CheckInData[] }) => {
 };
 
 export default function TeamsPage() {
-  const [checkins, setCheckins] = useState<CheckInData[]>([]);
+  const [playersByTeam, setPlayersByTeam] = useState<Record<string, Player[]>>({
+    Rojo: [],
+    Verde: [],
+    Azul: [],
+    Amarillo: [],
+  });
+
+  const [scoresByTeam, setScoresByTeam] = useState<Record<string, number>>({
+    Rojo: 0,
+    Verde: 0,
+    Azul: 0,
+    Amarillo: 0,
+  });
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "checkins"), (snapshot) => {
-      const data: CheckInData[] = [];
+    const unsubscribe = onSnapshot(collection(db, "teams"), (snapshot) => {
+      const grouped: Record<string, Player[]> = {
+        Rojo: [],
+        Verde: [],
+        Azul: [],
+        Amarillo: [],
+      };
+
+      const scores: Record<string, number> = {
+        Rojo: 0,
+        Verde: 0,
+        Azul: 0,
+        Amarillo: 0,
+      };
+
       snapshot.forEach((doc) => {
-        const entry = doc.data();
-        data.push({
-          id: doc.id,
-          name: entry.name ?? "Sin nombre",
-          team: entry.team,
-          photo: entry.photo,
-        });
+        const teamId = doc.id;
+        const teamData = doc.data();
+        const teamName = teamId.charAt(0).toUpperCase() + teamId.slice(1);
+
+        console.log('Team ID:', teamId, 'Team Name:', teamName, 'Score:', teamData.score);
+
+        if (grouped[teamName] !== undefined) {
+          grouped[teamName] = teamData.players || [];
+          scores[teamName] = teamData.score || 0;
+        }
       });
-      setCheckins(data);
+
+      console.log('Final scores:', scores);
+
+      setPlayersByTeam(grouped);
+      setScoresByTeam(scores);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const playersByTeam = useMemo(() => {
-    const grouped: Record<string, CheckInData[]> = {
-      Rojo: [],
-      Verde: [],
-      Azul: [],
-      Amarillo: [],
-    };
-
-    checkins.forEach((player) => {
-      if (grouped[player.team]) {
-        grouped[player.team].push(player);
-      }
-    });
-
-    return grouped;
-  }, [checkins]);
-
   return (
-    <main className="min-h-screen bg-gradient-to-b from-black to-zinc-900 text-white px-6 py-10">
+    <main className="min-h-screen text-white px-6 py-10">
       <div className="max-w-6xl mx-auto flex flex-col gap-8">
         <header className="text-center space-y-3">
           <Logo>
             <h1>FSN</h1>
           </Logo>
-          <p className="text-sm uppercase tracking-[0.6em] text-white/60">Check-ins confirmados</p>
-          <h2 className="text-3xl font-semibold">Equipos y llegadas</h2>
+          <p className="text-3xl uppercase tracking-[0.35em] text-white">Dashboard</p>
         </header>
 
         <div className="grid gap-6 lg:grid-cols-2">
           {teamsMeta.map((team) => (
             <section
               key={team.id}
-              className={`h-64 rounded-3xl border border-white/20 bg-gradient-to-b ${team.gradient} bg-opacity-80 p-4 shadow-2xl overflow-hidden`}
+              className={`rounded-3xl border border-white/20 bg-gradient-to-b ${team.gradient} bg-opacity-80 p-4 shadow-2xl overflow-hidden`}
             >
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.4em] text-white/60">Equipo</p>
-                  <h3 className="text-xl font-semibold uppercase tracking-[0.2em]">{team.label}</h3>
+                  <p className="text-xs uppercase tracking-[0.4em] text-white/90">{team.label}</p>
                 </div>
                 <span className="text-xs uppercase tracking-[0.3em] text-white/70">
                   {playersByTeam[team.id]?.length ?? 0} jugadores
@@ -173,6 +190,9 @@ export default function TeamsPage() {
               </div>
               <div className="h-48">
                 <TeamCarousel players={playersByTeam[team.id] ?? []} />
+              </div>
+              <div className="mt-3 text-center">
+                <p className="text-lg font-bold">{scoresByTeam[team.id]} puntos</p>
               </div>
             </section>
           ))}
