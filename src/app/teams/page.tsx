@@ -11,12 +11,7 @@ import Autoplay from "embla-carousel-autoplay";
 type Player = {
   name: string;
   photo?: string;
-  createdAt?: any;
-};
-
-type TeamData = {
-  id: string;
-  players: Player[];
+  createdAt?: string;
 };
 
 const teamsMeta = [

@@ -80,7 +80,6 @@ const CheckIn = () => {
     setTimeout(() => {
       setSelectedTeam(teams[randomIndex]);
       setIsSpinning(false);
-      setStatusMessage(`Te tocó el equipo ${teams[randomIndex]}!`);
     }, 3500);
   };
 
@@ -228,6 +227,8 @@ const CheckIn = () => {
         >
           {isSubmitting ? "Registrando..." : "Registrarte"}
         </button>
+
+        {statusMessage && <p className="text-center text-sm text-gray-200/80">{statusMessage}</p>}
       </form>
     </section>
   );
