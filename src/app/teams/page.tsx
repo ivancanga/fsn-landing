@@ -38,7 +38,7 @@ const TeamCarousel = ({ players }: { players: Player[] }) => {
   if (players.length === 0) {
     return (
       <div className="h-full flex items-center justify-center rounded-3xl border border-white/20 bg-black/40">
-        <span className="text-sm text-gray-300">Aún no hay jugadores...</span>
+        <span className="text-xl text-gray-300">Aún no hay jugadores...</span>
       </div>
     );
   }
@@ -47,14 +47,14 @@ const TeamCarousel = ({ players }: { players: Player[] }) => {
     const player = players[0];
     return (
       <div className="h-full flex items-center justify-center">
-        <article className="w-[11rem] h-full rounded-3xl border border-white/30 bg-black/60 shadow-xl overflow-hidden flex flex-col">
-          <div className="relative h-4/5 w-full overflow-hidden">
+        <article className="w-[9rem] h-full rounded-3xl border border-white/30 bg-black/60 shadow-xl overflow-hidden flex flex-col">
+          <div className="relative h-[85%] w-full overflow-hidden">
             {player.photo ? (
               <Image
                 src={player.photo}
                 alt={player.name}
                 fill
-                sizes="160px"
+                sizes="144px"
                 className="object-cover"
                 unoptimized
               />
@@ -64,8 +64,8 @@ const TeamCarousel = ({ players }: { players: Player[] }) => {
               </div>
             )}
           </div>
-          <div className="h-1/5 flex items-center justify-center px-2 text-center min-h-[20px]">
-            <p className="text-sm font-semibold">{player.name}</p>
+          <div className="h-[15%] flex items-center justify-center px-2 text-center min-h-[20px]">
+            <p className="text-base font-bold uppercase">{player.name}</p>
           </div>
         </article>
       </div>
@@ -78,15 +78,15 @@ const TeamCarousel = ({ players }: { players: Player[] }) => {
         {players.map((player, index) => (
           <article
             key={`${player.name}-${index}`}
-            className="flex-shrink-0 w-[11rem] h-full rounded-3xl border border-white/30 bg-black/60 shadow-xl overflow-hidden flex flex-col mr-3"
+            className="flex-shrink-0 w-[9rem] h-full rounded-3xl border border-white/30 bg-black/60 shadow-xl overflow-hidden flex flex-col mr-3"
           >
-            <div className="relative h-4/5 w-full overflow-hidden">
+            <div className="relative h-[85%] w-full overflow-hidden">
               {player.photo ? (
                 <Image
                   src={player.photo}
                   alt={player.name}
                   fill
-                  sizes="160px"
+                  sizes="144px"
                   className="object-cover"
                   unoptimized
                 />
@@ -96,8 +96,8 @@ const TeamCarousel = ({ players }: { players: Player[] }) => {
                 </div>
               )}
             </div>
-            <div className="h-1/5 flex items-center justify-center px-2 text-center min-h-[20px]">
-              <p className="text-sm font-semibold">{player.name}</p>
+            <div className="h-[15%] flex items-center justify-center px-2 text-center min-h-[20px]">
+              <p className="text-base font-bold uppercase">{player.name}</p>
             </div>
           </article>
         ))}
@@ -159,6 +159,14 @@ export default function TeamsPage() {
     return () => unsubscribe();
   }, []);
 
+  const sortedTeams = useMemo(() => {
+    return [...teamsMeta].sort((a, b) => {
+      const scoreA = scoresByTeam[a.id] || 0;
+      const scoreB = scoresByTeam[b.id] || 0;
+      return scoreB - scoreA;
+    });
+  }, [scoresByTeam]);
+
   return (
     <main className="min-h-screen text-white px-6 py-10">
       <div className="max-w-6xl mx-auto flex flex-col gap-8">
@@ -166,11 +174,10 @@ export default function TeamsPage() {
           <Logo>
             <h1>FSN</h1>
           </Logo>
-          <p className="text-3xl uppercase tracking-[0.35em] text-white">Dashboard</p>
         </header>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          {teamsMeta.map((team) => (
+          {sortedTeams.map((team) => (
             <section
               key={team.id}
               className={`rounded-3xl border border-white/20 bg-gradient-to-b ${team.gradient} bg-opacity-80 p-4 shadow-2xl overflow-hidden`}
@@ -187,7 +194,7 @@ export default function TeamsPage() {
                 <TeamCarousel players={playersByTeam[team.id] ?? []} />
               </div>
               <div className="mt-3 text-center">
-                <p className="text-lg font-bold">{scoresByTeam[team.id]} puntos</p>
+                <p className="text-4xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{scoresByTeam[team.id]} puntos</p>
               </div>
             </section>
           ))}

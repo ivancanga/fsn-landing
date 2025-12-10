@@ -30,6 +30,7 @@ const CheckIn = () => {
   const [rotation, setRotation] = useState(0);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
     if (ENABLE_CHECK_IN_VALIDATION) {
@@ -40,7 +41,7 @@ const CheckIn = () => {
     }
   }, [router]);
 
-  const canRegister = !!playerName.trim() && !!selectedTeam && !!photoFile;
+  const canRegister = !!playerName.trim() && !!selectedTeam && !!photoFile && !isRedirecting;
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -115,6 +116,7 @@ const CheckIn = () => {
         sessionStorage.setItem("hasCheckedIn", "true");
       }
       setStatusMessage("¡Check-in completado! Redirigiendo...");
+      setIsRedirecting(true);
 
       setTimeout(() => {
         router.push("/teams");
@@ -128,20 +130,20 @@ const CheckIn = () => {
   };
 
   return (
-    <section className="mt-0 w-full max-w-4xl mx-auto bg-white/5 border border-white/30 rounded-3xl p-8 shadow-2xl text-white">
+    <section className="mt-0 w-full max-w-4xl mx-auto bg-white/5 border border-white/30 rounded-3xl p-8 shadow-2xl text-white text-xl">
       <div className="flex flex-col gap-2 mb-6">
         <h2 className="text-4xl font-bold tracking-tight">Check-in</h2>
         <p className="text-lg text-gray-200">
-          Rotá la ruleta para elegir un equipo al azar y sacate una selfie con tu cámara para el dashboard.
+          Girá la rueda para elegir un equipo al azar y sacate una selfie para el dashboard 😀
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <div>
-          <label className="block text-sm font-semibold text-gray-300 mb-2">Tu nombre</label>
+          <label className="block text-m font-semibold text-gray-300 mb-2">👉 Tu nombre</label>
           <input
             type="text"
-            placeholder="Escribí cómo querés que te llamen"
+            placeholder=""
             value={playerName}
             onChange={(event) => setPlayerName(event.target.value)}
             className="w-full rounded-2xl bg-white/10 border border-white/30 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
@@ -150,12 +152,12 @@ const CheckIn = () => {
 
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <label className="block text-sm font-semibold text-gray-300">Equipo</label>
+            <label className="block text-m font-semibold text-gray-300">👉 Equipo</label>
             <button
               type="button"
               onClick={handleSpin}
               disabled={isSpinning || hasSpun}
-              className={`text-sm rounded-full px-4 py-2 ${isSpinning || hasSpun ? "bg-gray-500/60" : "bg-white/20 hover:bg-white/40"} transition-all`}
+              className={`text-m rounded-full px-4 py-2 ${isSpinning || hasSpun ? "bg-gray-500/60" : "bg-white/20 hover:bg-white/40"} transition-all`}
             >
               {isSpinning ? "Girando..." : hasSpun ? "Ya giraste" : "Girar rueda"}
             </button>
@@ -179,7 +181,7 @@ const CheckIn = () => {
             </div>
           </div>
 
-          <p className="text-center text-white/80 mt-2">
+          <p className="text-center text-3xl text-white/80 mt-2">
             Te tocó el equipo:{" "}
             <span
               className="font-bold"
@@ -191,14 +193,24 @@ const CheckIn = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label className="block text-sm font-semibold text-gray-300">Foto</label>
+          <label className="block text-m font-semibold text-gray-300">👉 Tu foto</label>
           <input
+            id="photo-upload"
             type="file"
             accept="image/*"
             capture="environment"
             onChange={handleFileChange}
-            className="text-sm text-white"
+            className="hidden"
           />
+          <label
+            htmlFor="photo-upload"
+            className="cursor-pointer rounded-2xl bg-white/10 border-2 border-white/30 px-6 py-4 text-center text-white hover:bg-white/20 transition-all flex items-center justify-center gap-2"
+          >
+            <span className="text-2xl">📸</span>
+            <span className="font-semibold">
+              {photoFile ? photoFile.name : "Seleccionar foto"}
+            </span>
+          </label>
           {photoPreview && (
             <div className="mt-4">
               <p className="text-xs text-gray-400">Vista previa</p>
@@ -221,14 +233,25 @@ const CheckIn = () => {
           disabled={!canRegister || isSubmitting}
           className={`rounded-2xl px-6 py-4 font-bold text-xl transition ${
             canRegister && !isSubmitting
-              ? "bg-gradient-to-r from-[#f97316] to-[#facc15] text-black"
-              : "bg-gray-500/60 text-white"
+              ? `text-white hover:opacity-90 shadow-lg ${
+                  selectedTeam === "Rojo"
+                    ? "bg-[#ef4444]"
+                    : selectedTeam === "Verde"
+                    ? "bg-[#22c55e]"
+                    : selectedTeam === "Azul"
+                    ? "bg-[#3b82f6]"
+                    : selectedTeam === "Amarillo"
+                    ? "bg-[#facc15]"
+                    : "bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500"
+                }`
+              : "bg-gray-700/40 text-gray-500 cursor-not-allowed"
           }`}
+          style={{ textShadow: '0 2px 4px rgba(0, 0, 0, 0.8)' }}
         >
-          {isSubmitting ? "Registrando..." : "Registrarte"}
+          {isSubmitting ? "Registrando..." : isRedirecting ? "Redirigiendo..." : "Registrarse"}
         </button>
 
-        {statusMessage && <p className="text-center text-sm text-gray-200/80">{statusMessage}</p>}
+        {statusMessage && <p className="text-center text-m text-gray-200/80">{statusMessage}</p>}
       </form>
     </section>
   );
