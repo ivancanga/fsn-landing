@@ -35,29 +35,29 @@ export default function Stats() {
 
   // clases de color por equipo (texto + resplandor)
   const teamClass: Record<string, string> = {
-    Rojo: styles.rojo,
-    Verde: styles.verde,
-    Azul: styles.azul,
-    Amarillo: styles.amarillo,
+    Rojo: "text-red-500",
+    Verde: "text-green-500",
+    Azul: "text-blue-500",
+    Amarillo: "text-yellow-400",
   };
 
   return (
-    <div className={`${styles.wrapper} h-screen w-screen relative`}>
+    <div className="h-screen w-screen relative bg-black">
       {/* Título */}
-      <div className={`${styles.title} absolute top-4 left-1/2 -translate-x-1/2`}>
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white text-3xl font-bold z-10">
         Intentos por equipo
       </div>
 
       {/* Imagen central con parpadeo */}
-      <div className={`${styles.centerImgWrap}`}>
-        <Image src="/elritobg.png" alt="El rito de sangre" width={1200} height={800} className={styles.centerImg} priority />
+      <div className="absolute inset-0 flex items-center justify-center opacity-30">
+        <Image src="/elritobg.png" alt="El rito de sangre" width={1200} height={800} className="object-contain animate-pulse" priority />
       </div>
 
       {/* Cuadrantes */}
       <div className="grid grid-cols-2 grid-rows-2 h-full w-full">
         {teams.map((team) => (
-          <div key={team} className={styles.quad}>
-            <div className={`${styles.count} ${teamClass[team] || ""}`}>
+          <div key={team} className="flex items-center justify-center border border-white/20">
+            <div className={`text-8xl font-bold ${teamClass[team] || ""}`}>
               {attempts[team] ?? 0}
             </div>
           </div>
