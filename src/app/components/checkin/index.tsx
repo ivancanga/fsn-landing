@@ -187,12 +187,11 @@ const CheckIn = () => {
       if (ENABLE_CHECK_IN_VALIDATION) {
         sessionStorage.setItem("hasCheckedIn", "true");
       }
-      setStatusMessage("¡Check-in completado! Redirigiendo...");
       setIsRedirecting(true);
 
       setTimeout(() => {
         router.push("/teams");
-      }, 1500);
+      }, 2500);
     } catch (error) {
       console.error("Error al registrar check-in", error);
       setStatusMessage("No pudimos registrar tu check-in. Reintentá en un rato.");
@@ -200,6 +199,20 @@ const CheckIn = () => {
       setIsSubmitting(false);
     }
   };
+
+  if (isRedirecting) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-24 w-24 border-8 border-transparent border-t-white mb-8"></div>
+        <h2 className="text-4xl font-bold text-white text-center [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)] mb-2">
+          ¿Estás listo?
+        </h2>
+        <p className="text-5xl font-bold text-white [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">
+          ¡A jugar! 💪
+        </p>
+      </div>
+    );
+  }
 
   return (
     <section className="mt-0 w-full max-w-4xl mx-auto bg-white/5 border border-white/30 rounded-3xl p-8 shadow-2xl text-white text-xl transform-gpu">
@@ -317,7 +330,7 @@ const CheckIn = () => {
           }`}
           style={{ textShadow: '0 2px 4px rgba(0, 0, 0, 0.8)' }}
         >
-          {isSubmitting ? "Registrando..." : isRedirecting ? "Redirigiendo..." : "Registrarse"}
+          {isSubmitting ? "Registrando..." : "Registrarse"}
         </button>
 
         {statusMessage && <p className="text-center text-m text-gray-200/80 [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">{statusMessage}</p>}
