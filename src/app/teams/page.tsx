@@ -56,6 +56,7 @@ const TeamCarousel = ({ players }: { players: Player[] }) => {
                 fill
                 sizes="144px"
                 className="object-cover"
+                style={{ transform: 'scaleX(-1)' }}
                 unoptimized
               />
             ) : (
@@ -88,6 +89,7 @@ const TeamCarousel = ({ players }: { players: Player[] }) => {
                   fill
                   sizes="144px"
                   className="object-cover"
+                  style={{ transform: 'scaleX(-1)' }}
                   unoptimized
                 />
               ) : (

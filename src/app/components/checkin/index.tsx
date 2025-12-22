@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { useMemo, useState, useEffect } from "react";
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, collection, onSnapshot } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../../../utils/firebase";
 import { useRouter } from "next/navigation";
@@ -14,6 +14,10 @@ const teamColors = {
   Azul: "#3b82f6",
   Amarillo: "#facc15",
 };
+
+// Configuración del balanceador de equipos
+const MAX_PLAYERS_PER_TEAM = 8;
+const MAX_DIFFERENCE = 3;
 
 // Cambia esto a false para deshabilitar la validación de check-in duplicado
 const ENABLE_CHECK_IN_VALIDATION = false;
@@ -31,6 +35,38 @@ const CheckIn = () => {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [teamCounts, setTeamCounts] = useState<Record<string, number>>({
+    Rojo: 0,
+    Verde: 0,
+    Azul: 0,
+    Amarillo: 0,
+  });
+
+  // Cargar conteos de equipos desde Firebase
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "teams"), (snapshot) => {
+      const counts: Record<string, number> = {
+        Rojo: 0,
+        Verde: 0,
+        Azul: 0,
+        Amarillo: 0,
+      };
+
+      snapshot.forEach((doc) => {
+        const teamId = doc.id;
+        const teamData = doc.data();
+        const teamName = teamId.charAt(0).toUpperCase() + teamId.slice(1);
+
+        if (counts[teamName] !== undefined) {
+          counts[teamName] = teamData.players?.length || 0;
+        }
+      });
+
+      setTeamCounts(counts);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (ENABLE_CHECK_IN_VALIDATION) {
@@ -62,11 +98,47 @@ const CheckIn = () => {
     setPhotoFile(file);
   };
 
+  // Algoritmo de balanceo de equipos
+  const getEligibleTeams = (): string[] => {
+    const counts = Object.values(teamCounts);
+    const minCount = Math.min(...counts);
+    const maxCount = Math.max(...counts);
+
+    // Si todos los equipos están llenos, retornar array vacío
+    if (minCount >= MAX_PLAYERS_PER_TEAM) {
+      return [];
+    }
+
+    // Si la diferencia es menor a MAX_DIFFERENCE, todos los equipos no llenos son elegibles
+    if (maxCount - minCount < MAX_DIFFERENCE) {
+      return teams.filter(team => teamCounts[team] < MAX_PLAYERS_PER_TEAM);
+    }
+
+    // Si hay diferencia >= MAX_DIFFERENCE, solo los equipos con menos jugadores son elegibles
+    // Calculamos el umbral: equipos con minCount hasta minCount + MAX_DIFFERENCE - 1
+    const threshold = minCount + MAX_DIFFERENCE - 1;
+    return teams.filter(team =>
+      teamCounts[team] <= threshold && teamCounts[team] < MAX_PLAYERS_PER_TEAM
+    );
+  };
+
   const handleSpin = () => {
     if (isSpinning || hasSpun) return;
+
+    const eligibleTeams = getEligibleTeams();
+
+    if (eligibleTeams.length === 0) {
+      alert("Todos los equipos están llenos. No se puede realizar más check-in.");
+      return;
+    }
+
     setIsSpinning(true);
     setHasSpun(true);
-    const randomIndex = Math.floor(Math.random() * teams.length);
+
+    // Seleccionar aleatoriamente entre los equipos elegibles
+    const selectedEligibleTeam = eligibleTeams[Math.floor(Math.random() * eligibleTeams.length)];
+    const randomIndex = teams.indexOf(selectedEligibleTeam);
+
     const segmentAngle = 360 / teams.length;
     const extraSpins = 5;
 
@@ -143,7 +215,7 @@ const CheckIn = () => {
             placeholder=""
             value={playerName}
             onChange={(event) => setPlayerName(event.target.value)}
-            className="w-full rounded-2xl bg-white/10 border border-white/30 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full rounded-2xl bg-white/10 border border-white/30 px-4 py-3 text-white text-2xl font-bold [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)] focus:outline-none focus:ring-2 focus:ring-red-500"
           />
         </div>
 
@@ -160,7 +232,7 @@ const CheckIn = () => {
             </button>
           </div>
 
-          <div className="relative flex items-center justify-center w-full aspect-square max-w-md mx-auto overflow-hidden">
+          <div className="relative flex items-center justify-center w-full aspect-square max-w-md mx-auto">
             <div
               className="w-full h-full rounded-full border-4 border-white/40 shadow-xl will-change-transform"
               style={{
@@ -170,7 +242,7 @@ const CheckIn = () => {
                 transition: "transform 3.5s cubic-bezier(0.25, 0.1, 0.25, 1)",
               }}
             />
-            <div className="pointer-events-none absolute top-[-8px] w-0 h-0 border-l-[14px] border-r-[14px] border-t-[24px] border-l-transparent border-r-transparent border-t-white drop-shadow-lg" />
+            <div className="pointer-events-none absolute top-[-12px] w-0 h-0 border-l-[16px] border-r-[16px] border-t-[28px] border-l-transparent border-r-transparent border-t-white drop-shadow-lg z-10" style={{ filter: 'drop-shadow(0 0 2px rgba(0, 0, 0, 1))' }} />
             <div className="absolute flex items-center justify-center [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">
               <Logo size="small" color="white">
                 <h1>FSN</h1>
@@ -208,15 +280,16 @@ const CheckIn = () => {
             </span>
           </label>
           {photoPreview && (
-            <div className="mt-4">
-              <p className="text-m font-semibold text-gray-300 [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">Vista previa</p>
-              <div className="relative mt-1 rounded-2xl border border-white/30 w-full max-h-60 overflow-hidden bg-black/40 aspect-[3/4]">
+            <div className="mt-4 flex flex-col items-center">
+              <p className="text-m font-semibold text-gray-300 mb-2 [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">Vista previa</p>
+              <div className="w-[9rem] h-[12rem] rounded-3xl border border-white/30 bg-black/60 shadow-xl overflow-hidden relative">
                 <Image
                   src={photoPreview}
                   alt="Foto de check-in"
                   fill
-                  sizes="(max-width: 640px) 100vw, 400px"
+                  sizes="144px"
                   className="object-cover"
+                  style={{ transform: 'scaleX(-1)' }}
                   unoptimized
                 />
               </div>
@@ -227,7 +300,7 @@ const CheckIn = () => {
         <button
           type="submit"
           disabled={!canRegister || isSubmitting}
-          className={`rounded-2xl px-6 py-4 font-bold text-xl transition ${
+          className={`rounded-2xl px-6 py-4 font-bold text-2xl transition ${
             canRegister && !isSubmitting
               ? `text-white hover:opacity-90 shadow-lg ${
                   selectedTeam === "Rojo"
