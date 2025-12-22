@@ -165,32 +165,40 @@ export default function VotePage() {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <header className={styles.header}>
-        <div className={styles.brand}>FSN</div>
-        <div className={styles.titleBlock}>
-          <span className={styles.kicker}>EL RITO</span>
-          <h1 className={styles.pageTitle}>Votación de outfit</h1>
+    <div className="min-h-screen bg-black text-white p-4">
+      <header className="text-center mb-8">
+        <div className="text-4xl font-bold text-[#FFE478] mb-2">FSN</div>
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-sm uppercase tracking-wider text-red-500 font-bold">EL RITO</span>
+          <h1 className="text-3xl font-bold">Votación de outfit</h1>
         </div>
       </header>
 
-      <div className={styles.titleBlock}>
-        <h1 className={styles.pageTitle}>Votos registrados: {totalVotes}</h1>
+      <div className="text-center mb-4">
+        <h1 className="text-2xl font-bold">Votos registrados: {totalVotes}</h1>
       </div>
 
       <h3></h3>
 
-      <div className={styles.statusBar} data-state={syncState}>
-        <span className={styles.pulsingDot} aria-hidden />
+      <div className={`flex items-center justify-center gap-2 mb-6 p-3 rounded-lg ${
+        syncState === "connecting" ? "bg-yellow-900/30" :
+        syncState === "syncing" ? "bg-blue-900/30" :
+        "bg-green-900/30"
+      }`}>
+        <span className={`inline-block w-2 h-2 rounded-full ${
+          syncState === "connecting" ? "bg-yellow-500 animate-pulse" :
+          syncState === "syncing" ? "bg-blue-500 animate-pulse" :
+          "bg-green-500"
+        }`} aria-hidden />
         <span>{statusMessage}</span>
       </div>
 
-      <main className={styles.content}>
-        <p className={styles.intro}>
+      <main className="max-w-6xl mx-auto">
+        <p className="text-center mb-8 text-lg">
           Elegí a un participante para apoyarlo con su outfit/makeup. Podrás cambiar tu voto antes de que cierre la votación. Evitá elegir solo porque es de tu equipo, votá por el que más de guste y reconozcamos su esfuerzo 😉. El ganador se lleva 5 puntos al equipo.
         </p>
 
-        <div className={styles.grid}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {(showResults
             ? [...PARTICIPANT_IDS].sort(
                 (a, b) => (votesMap[b as string] ?? 0) - (votesMap[a as string] ?? 0)
@@ -207,21 +215,23 @@ export default function VotePage() {
               <button
                 key={id}
                 type="button"
-                className={`${styles.card} ${
-                  isSelected ? styles.cardSelected : ""
-                }`}
+                className={`flex flex-col p-6 rounded-xl border-2 transition-all ${
+                  isSelected
+                    ? "border-[#FFE478] bg-[#FFE478]/10 shadow-lg shadow-[#FFE478]/20"
+                    : "border-white/30 bg-white/5 hover:border-white/50 hover:bg-white/10"
+                } ${syncState === "syncing" ? "opacity-50 cursor-wait" : "cursor-pointer"}`}
                 onClick={() => handleVote(id)}
                 disabled={syncState === "syncing"}
               >
-                <div className={styles.cardHeader}>
-                  <span className={styles.cardBadge}>{badge}</span>
-                  <h2 className={styles.cardTitle}>{name}</h2>
+                <div className="mb-3">
+                  <span className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider bg-red-600 rounded-full mb-2">{badge}</span>
+                  <h2 className="text-xl font-bold">{name}</h2>
                 </div>
-                <p className={styles.cardDescription}>{desc}</p>
+                <p className="text-sm text-gray-300 mb-4 flex-1">{desc}</p>
                 {showResults && (
-                  <div className={styles.cardCount}>{count} votos</div>
+                  <div className="text-lg font-bold text-[#FFE478] mb-2">{count} votos</div>
                 )}
-                <div className={styles.cardFooter}>
+                <div className="text-sm font-semibold mt-auto pt-3 border-t border-white/20">
                   {isSelected ? "Seleccion actual" : "Elegir participante"}
                 </div>
               </button>
