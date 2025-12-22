@@ -27,6 +27,11 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   font-family: 'Darker Grotesque', sans-serif;
+  overflow-x: hidden;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 h3 {

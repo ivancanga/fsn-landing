@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { doc, onSnapshot, runTransaction } from "firebase/firestore";
 import { db } from "../../utils/firebase";
-import styles from "./vote-bloody.module.css";
 
 const STORAGE_KEY = "fsnVoteParticipant";
 

@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { Logo } from "./styled";
 import Countdown from "./components/countdown";
 
@@ -19,24 +18,21 @@ export default function Home() {
             alt="summer edition"
             width={300}
             height={300}
-            className="mx-auto mt-10"
+            className="mx-auto mt-10 animate-bounce-slow"
             priority
           />
           <Countdown />
         </div>
-        <Link
-          href="/checkin"
-          className="mt-10 px-6 py-3 rounded-full bg-gradient-to-r from-[#f97316] to-[#facc15] text-black font-bold text-lg shadow-lg shadow-black/40"
-        >
-          Hacer check-in
-        </Link>
       </div>
 
-      <div className="text-white w-full text-center mt-6">
-        <h2>
+      <div className="text-white w-full text-center mt-24">
+        <h2 className="text-4xl font-extrabold [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">
           sábado 17 de enero <br /> 12:00 hs
         </h2>
-        <a href="https://www.instagram.com/fiestasinnombre/">
+        <p className="text-2xl font-bold mt-2 [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">
+          Villa Devoto, CABA
+        </p>
+        <a href="https://www.instagram.com/fiestasinnombre/" className="[text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">
           @fiestasinnombre
         </a>
       </div>

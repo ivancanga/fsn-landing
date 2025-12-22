@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "../../utils/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
-import styles from "./stats-bloody.module.css";
 
 interface Attempts {
   [key: string]: number | string | null;

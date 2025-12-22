@@ -130,17 +130,14 @@ const CheckIn = () => {
   };
 
   return (
-    <section className="mt-0 w-full max-w-4xl mx-auto bg-white/5 border border-white/30 rounded-3xl p-8 shadow-2xl text-white text-xl">
+    <section className="mt-0 w-full max-w-4xl mx-auto bg-white/5 border border-white/30 rounded-3xl p-8 shadow-2xl text-white text-xl transform-gpu">
       <div className="flex flex-col gap-2 mb-6">
-        <h2 className="text-4xl font-bold tracking-tight">Check-in</h2>
-        <p className="text-lg text-gray-200">
-          Girá la rueda para elegir un equipo al azar y sacate una selfie para el dashboard 😀
-        </p>
+        <h2 className="text-4xl font-bold tracking-tight [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">Check-in</h2>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <div>
-          <label className="block text-m font-semibold text-gray-300 mb-2">👉 Tu nombre</label>
+          <label className="block text-m font-semibold text-gray-300 mb-2 [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">👉 Tu nombre</label>
           <input
             type="text"
             placeholder=""
@@ -152,48 +149,47 @@ const CheckIn = () => {
 
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <label className="block text-m font-semibold text-gray-300">👉 Equipo</label>
+            <label className="block text-m font-semibold text-gray-300 [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">👉 Equipo</label>
             <button
               type="button"
               onClick={handleSpin}
               disabled={isSpinning || hasSpun}
-              className={`text-m rounded-full px-4 py-2 ${isSpinning || hasSpun ? "bg-gray-500/60" : "bg-white/20 hover:bg-white/40"} transition-all`}
+              className={`text-m rounded-full px-4 py-2 font-bold transition-all ${isSpinning || hasSpun ? "bg-gray-500/60 text-white" : "bg-[#f3b0da] text-white hover:bg-[#f3b0da]/80"}`}
             >
               {isSpinning ? "Girando..." : hasSpun ? "Ya giraste" : "Girar rueda"}
             </button>
           </div>
 
-          <div className="relative flex items-center justify-center w-full aspect-square max-w-md mx-auto">
+          <div className="relative flex items-center justify-center w-full aspect-square max-w-md mx-auto overflow-hidden">
             <div
-              className="w-full h-full rounded-full border-4 border-white/40 shadow-xl"
+              className="w-full h-full rounded-full border-4 border-white/40 shadow-xl will-change-transform"
               style={{
                 backgroundImage:
                   "conic-gradient(#ef4444 0deg 90deg, #22c55e 90deg 180deg, #3b82f6 180deg 270deg, #facc15 270deg 360deg)",
-                transform: `rotate(${rotation}deg)`,
+                transform: `rotate(${rotation}deg) translateZ(0)`,
                 transition: "transform 3.5s cubic-bezier(0.25, 0.1, 0.25, 1)",
               }}
             />
             <div className="pointer-events-none absolute top-[-8px] w-0 h-0 border-l-[14px] border-r-[14px] border-t-[24px] border-l-transparent border-r-transparent border-t-white drop-shadow-lg" />
-            <div className="absolute flex items-center justify-center">
+            <div className="absolute flex items-center justify-center [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">
               <Logo size="small" color="white">
                 <h1>FSN</h1>
               </Logo>
             </div>
           </div>
 
-          <p className="text-center text-3xl text-white/80 mt-2">
-            Te tocó el equipo:{" "}
-            <span
-              className="font-bold"
-              style={{ color: selectedTeam ? teamColors[selectedTeam as keyof typeof teamColors] : "white" }}
+          {selectedTeam && (
+            <div
+              className="text-center text-3xl text-white font-bold mt-2 py-4 px-6 rounded-2xl min-h-[3rem]"
+              style={{ backgroundColor: `${teamColors[selectedTeam as keyof typeof teamColors]}CC` }}
             >
-              {selectedTeam ?? "—"}
-            </span>
-          </p>
+              Tu equipo: {selectedTeam}
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-2">
-          <label className="block text-m font-semibold text-gray-300">👉 Tu foto</label>
+          <label className="block text-m font-semibold text-gray-300 [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">👉 Tu foto</label>
           <input
             id="photo-upload"
             type="file"
@@ -207,13 +203,13 @@ const CheckIn = () => {
             className="cursor-pointer rounded-2xl bg-white/10 border-2 border-white/30 px-6 py-4 text-center text-white hover:bg-white/20 transition-all flex items-center justify-center gap-2"
           >
             <span className="text-2xl">📸</span>
-            <span className="font-semibold">
+            <span className="font-semibold [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">
               {photoFile ? photoFile.name : "Seleccionar foto"}
             </span>
           </label>
           {photoPreview && (
             <div className="mt-4">
-              <p className="text-xs text-gray-400">Vista previa</p>
+              <p className="text-m font-semibold text-gray-300 [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">Vista previa</p>
               <div className="relative mt-1 rounded-2xl border border-white/30 w-full max-h-60 overflow-hidden bg-black/40 aspect-[3/4]">
                 <Image
                   src={photoPreview}
@@ -251,7 +247,7 @@ const CheckIn = () => {
           {isSubmitting ? "Registrando..." : isRedirecting ? "Redirigiendo..." : "Registrarse"}
         </button>
 
-        {statusMessage && <p className="text-center text-m text-gray-200/80">{statusMessage}</p>}
+        {statusMessage && <p className="text-center text-m text-gray-200/80 [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">{statusMessage}</p>}
       </form>
     </section>
   );

@@ -5,7 +5,6 @@ import { useState } from "react";
 import { db } from "../../utils/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { PasswordContaianer } from "../styled";
-import styles from "./game-bloody.module.css"; // 👈 CSS module
 
 const secretCode = "890782";
 
@@ -60,20 +59,20 @@ export default function Game() {
       : "bg-gray-700";
 
   return (
-    <div className={`flex flex-col items-center justify-center h-screen ${styles.wrapper}`}>
-      <h1 className={`text-3xl font-bold mb-8 p-4 text-white rounded uppercase w-80 text-center ${styles.title} ${teamColorClass}`}>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className={`text-3xl font-bold mb-8 p-4 text-white rounded uppercase w-80 text-center ${teamColorClass}`}>
         Equipo {team}
       </h1>
 
-      <PasswordContaianer className={`mb-6 ${styles.password}`}>
+      <PasswordContaianer className="mb-6">
         {code || "******"}
       </PasswordContaianer>
 
-      <div className={`grid grid-cols-3 gap-3 mb-4 w-[22rem] max-w-[90vw] ${styles.keypad}`}>
+      <div className="grid grid-cols-3 gap-3 mb-4 w-[22rem] max-w-[90vw]">
         {Array.from({ length: 9 }, (_, i) => i + 1).map((num) => (
           <button
             key={num}
-            className={`${styles.key} ${styles.num}`}
+            className="digital-key"
             onClick={() => handleKeyPress(num.toString())}
           >
             {num}
@@ -82,14 +81,14 @@ export default function Game() {
 
         {/* Clear */}
         <button
-          className={`${styles.key} ${styles.clear}`}
+          className="digital-key"
           aria-label="Borrar"
           onClick={() => setCode("")}
         />
 
         {/* 0 */}
         <button
-          className={`${styles.key} ${styles.num}`}
+          className="digital-key"
           onClick={() => handleKeyPress("0")}
         >
           0
@@ -97,7 +96,7 @@ export default function Game() {
 
         {/* Submit */}
         <button
-          className={`${styles.key} ${styles.submit}`}
+          className="digital-key"
           aria-label="Enviar"
           onClick={handleSubmit}
         />
