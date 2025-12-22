@@ -28,10 +28,13 @@ body {
   background-attachment: fixed;
   font-family: 'Darker Grotesque', sans-serif;
   overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 100vh;
 }
 
 html {
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 h3 {

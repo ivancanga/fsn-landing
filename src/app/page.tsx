@@ -6,7 +6,7 @@ import Countdown from "./components/countdown";
 
 export default function Home() {
   return (
-    <>
+    <div className="min-h-screen w-full py-8 px-4">
       <div className={`flex flex-col items-center text-white relative`}>
         <div className="relative z-10 flex flex-col items-center">
           <Logo>
@@ -25,7 +25,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="text-white w-full text-center mt-24">
+      <div className="text-white w-full text-center mt-24 pb-8">
         <h2 className="text-4xl font-extrabold [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">
           sábado 17 de enero <br /> 12:00 hs
         </h2>
@@ -36,6 +36,6 @@ export default function Home() {
           @fiestasinnombre
         </a>
       </div>
-    </>
+    </div>
   );
 }
