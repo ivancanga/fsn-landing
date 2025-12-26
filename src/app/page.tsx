@@ -12,7 +12,6 @@ export default function Home() {
           <Logo>
             <h1>FSN</h1>
           </Logo>
-          <h4>ESPECIAL CUMPLEAÑOS</h4>
           <Image
             src="/9web.png"
             alt="summer edition"
@@ -32,8 +31,18 @@ export default function Home() {
         <p className="text-2xl font-bold mt-2 [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">
           Villa Devoto, CABA
         </p>
-        <a href="https://www.instagram.com/fiestasinnombre/" className="[text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">
-          @fiestasinnombre
+        <a
+          href="https://www.instagram.com/fiestasinnombre/"
+          className="inline-block hover:opacity-80 transition-opacity mt-4"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="/instagram-icon.png"
+            alt="Instagram - @fiestasinnombre"
+            width={64}
+            height={64}
+          />
         </a>
       </div>
     </div>

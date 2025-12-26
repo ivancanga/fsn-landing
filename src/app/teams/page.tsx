@@ -170,9 +170,9 @@ export default function TeamsPage() {
   }, [scoresByTeam]);
 
   return (
-    <main className="min-h-screen text-white px-6 py-10">
+    <main className="min-h-screen text-white px-6">
       <div className="max-w-6xl mx-auto flex flex-col gap-8">
-        <header className="text-center space-y-3">
+        <header className="text-center space-3">
           <Logo>
             <h1>FSN</h1>
           </Logo>
