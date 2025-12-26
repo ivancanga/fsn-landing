@@ -8,7 +8,7 @@ const Countdown = () => {
   const [hasEventStarted, setHasEventStarted] = useState(false);
 
   useEffect(() => {
-    const targetDate = new Date("2025-01-17T12:00:00");
+    const targetDate = new Date("2026-01-17T12:00:00");
 
     const updateCountdown = () => {
       const now = new Date();
