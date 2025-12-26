@@ -170,7 +170,7 @@ export default function TeamsPage() {
   }, [scoresByTeam]);
 
   return (
-    <main className="min-h-screen text-white px-6">
+    <main className="min-h-screen text-white px-6 mb-24">
       <div className="max-w-6xl mx-auto flex flex-col gap-8">
         <header className="text-center space-3">
           <Logo>
