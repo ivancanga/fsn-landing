@@ -20,7 +20,7 @@ const MAX_PLAYERS_PER_TEAM = 8;
 const MAX_DIFFERENCE = 3;
 
 // Cambia esto a false para deshabilitar la validación de check-in duplicado
-const ENABLE_CHECK_IN_VALIDATION = false;
+const ENABLE_CHECK_IN_VALIDATION = true;
 
 const CheckIn = () => {
   const router = useRouter();
@@ -41,6 +41,16 @@ const CheckIn = () => {
     Azul: 0,
     Amarillo: 0,
   });
+
+  // Verificar si el usuario ya se registró y redirigir
+  useEffect(() => {
+    if (ENABLE_CHECK_IN_VALIDATION) {
+      const hasCheckedIn = sessionStorage.getItem("hasCheckedIn");
+      if (hasCheckedIn === "true") {
+        router.push("/teams");
+      }
+    }
+  }, [router]);
 
   // Cargar conteos de equipos desde Firebase
   useEffect(() => {
