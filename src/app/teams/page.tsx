@@ -57,7 +57,6 @@ const TeamCarousel = ({ players }: { players: Player[] }) => {
                 sizes="144px"
                 className="object-cover"
                 style={{ transform: 'scaleX(-1)' }}
-                unoptimized
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-xs text-gray-300">
