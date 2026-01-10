@@ -1,0 +1,56 @@
+[
+  {
+    "nombre": "Lobo",
+    "tipo": "lobo",
+    "habilidad": "🐺 Cada noche señala a un aldeano para ser asesinado por toda la manada de lobos vivos.",
+    "foto": "/lobos/lobo.jpg"
+  },
+  {
+    "nombre": "Lobo Supremo",
+    "tipo": "lobo",
+    "habilidad": "👑 Es el lobo negro supremo, su voto vale más que el resto, si durante noche los demás lobos se demoran en matar, él tendrá la decisión.",
+    "foto": "/lobos/supremo.jpg"
+  },
+  {
+    "nombre": "Aldeano",
+    "tipo": "aldeano",
+    "habilidad": "🧑‍🌾 Durante el día votará para eliminar a quien crea sospechoso del pueblo.",
+    "foto": "/lobos/aldeano.jpg"
+  },
+  {
+    "nombre": "Vidente",
+    "tipo": "aldeano",
+    "habilidad": "🔮 El rol más importante del juego. Cuando el gamemaster la llame, ella podrá señalar a alguien y saber si es lobo o no. Ella es la que más debe cuidar ser descubierta.",
+    "foto": "/lobos/vidente.jpg"
+  },
+  {
+    "nombre": "Vengador",
+    "tipo": "aldeano",
+    "habilidad": "⚔️ Una vez que muere, utiliza su espada como último recurso para vengarse y escoge matar a alguien.",
+    "foto": "/lobos/vengador.jpg"
+  },
+  {
+    "nombre": "Niña Pequeña",
+    "tipo": "aldeano",
+    "habilidad": "👧 Es una niña traviesa, y por las noches puede entreabrir los ojos y espiar... pero ojo, si alguien sospecha, el gamemaster la elimina automáticamente.",
+    "foto": "/lobos/ninia.jpg"
+  },
+  {
+    "nombre": "Cazador",
+    "tipo": "aldeano",
+    "habilidad": "🔫 Al ser eliminado, automáticamente muere el primer lobo a su derecha.",
+    "foto": "/lobos/cazador.jpg"
+  },
+  {
+    "nombre": "Ángel",
+    "tipo": "aldeano",
+    "habilidad": "👼 Al ser eliminado, sigue participando en el juego sin poder hablar, dos noches más tarde, regresa de la muerte como aldeano común.",
+    "foto": "/lobos/angel.jpg"
+  },
+  {
+    "nombre": "Bruja",
+    "tipo": "aldeano",
+    "habilidad": "🧙‍♀️ Posee solo una poción: revivir o envenenar. Cuando el gamemaster la llame, decidirá si usarla o no. Puede revivir a la vidente o envenenar un lobo.",
+    "foto": "/lobos/bruja.jpg"
+  }
+]
