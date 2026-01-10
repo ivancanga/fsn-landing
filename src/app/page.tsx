@@ -45,6 +45,15 @@ export default function Home() {
           />
         </a>
       </div>
+
+      <div className="text-white w-full text-center pb-8">
+        <a
+          href="/lobosvsaldeanos"
+          className="inline-block px-8 py-4 text-xl font-bold text-white uppercase no-underline border border-white/20 hover:border-white/40 rounded-xl bg-black/40 hover:bg-black/60 backdrop-blur-sm transition-all duration-300 [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]"
+        >
+          🐺 Lobos vs Aldeanos
+        </a>
+      </div>
     </div>
   );
 }
