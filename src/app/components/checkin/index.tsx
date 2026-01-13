@@ -89,7 +89,7 @@ const CheckIn = () => {
 
   const canRegister = !!playerName.trim() && !!selectedTeam && !!photoFile && !isRedirecting;
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) {
       setPhotoFile(null);
@@ -97,15 +97,62 @@ const CheckIn = () => {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const result = reader.result;
-      if (typeof result === "string") {
-        setPhotoPreview(result);
+    try {
+      // Optimize image before storing
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = document.createElement('img');
+
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+      });
+
+      const MAX_SIZE = 800;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > MAX_SIZE) {
+          height = (height * MAX_SIZE) / width;
+          width = MAX_SIZE;
+        }
+      } else {
+        if (height > MAX_SIZE) {
+          width = (width * MAX_SIZE) / height;
+          height = MAX_SIZE;
+        }
       }
-    };
-    reader.readAsDataURL(file);
-    setPhotoFile(file);
+
+      canvas.width = width;
+      canvas.height = height;
+      ctx?.drawImage(img, 0, 0, width, height);
+
+      const blob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => resolve(blob!), 'image/jpeg', 0.85);
+      });
+
+      // Convert blob to File
+      const optimizedFile = new File([blob], file.name, { type: 'image/jpeg' });
+
+      // Create preview
+      const previewUrl = URL.createObjectURL(blob);
+      setPhotoPreview(previewUrl);
+      setPhotoFile(optimizedFile);
+    } catch (error) {
+      console.error("Error optimizing image:", error);
+      // Fallback to original file if optimization fails
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result;
+        if (typeof result === "string") {
+          setPhotoPreview(result);
+        }
+      };
+      reader.readAsDataURL(file);
+      setPhotoFile(file);
+    }
   };
 
   // Algoritmo de balanceo de equipos
@@ -313,7 +360,6 @@ const CheckIn = () => {
                   sizes="144px"
                   className="object-cover"
                   style={{ transform: 'scaleX(-1)' }}
-                  unoptimized
                 />
               </div>
             </div>

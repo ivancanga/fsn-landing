@@ -1,12 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { doc, onSnapshot, runTransaction } from "firebase/firestore";
-import { db } from "../../utils/firebase";
+import { ref, getDownloadURL } from "firebase/storage";
+import { db, storage } from "../../utils/firebase";
+import { Logo } from "../styled";
 
 const STORAGE_KEY = "fsnVoteParticipant";
 
-// IDs de participantes definidos en la BD
 const PARTICIPANT_IDS = [
   "participante1",
   "participante2",
@@ -26,7 +28,7 @@ type VoteDoc = {
 
 type SyncState = "connecting" | "ready" | "syncing";
 
-export default function VotePage() {
+export default function OutfitsPage() {
   const [syncState, setSyncState] = useState<SyncState>("connecting");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hasVoted, setHasVoted] = useState(false);
@@ -36,6 +38,7 @@ export default function VotePage() {
   const [votesMap, setVotesMap] = useState<Record<string, number>>({});
   const [nameMap, setNameMap] = useState<Record<string, string>>({});
   const [descMap, setDescMap] = useState<Record<string, string>>({});
+  const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const storedVote = window.localStorage.getItem(STORAGE_KEY);
@@ -51,6 +54,23 @@ export default function VotePage() {
     }, 900);
 
     return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const loadImages = async () => {
+      const urls: Record<string, string> = {};
+      for (const id of PARTICIPANT_IDS) {
+        try {
+          const imageRef = ref(storage, `outfits/${id}.jpg`);
+          const url = await getDownloadURL(imageRef);
+          urls[id] = url;
+        } catch {
+          console.log(`No image found for ${id}`);
+        }
+      }
+      setImageUrls(urls);
+    };
+    loadImages();
   }, []);
 
   useEffect(() => {
@@ -91,7 +111,7 @@ export default function VotePage() {
   }, [voteDocRef]);
 
   const statusMessage = useMemo(() => {
-    if (syncState === "connecting") return "Conectando con base de datos...";
+    if (syncState === "connecting") return "Conectando...";
     if (syncState === "syncing") return "Sincronizando voto...";
     if (hasVoted) return "Voto registrado. Podés cambiarlo cuando quieras.";
     return "Listo para votar";
@@ -119,7 +139,6 @@ export default function VotePage() {
 
         const updates: Record<string, number | string> = {};
 
-        // Ensure names exist for both participants we touch
         const ensureName = (id: string) => {
           const currentName = data?.[id as ParticipantId]?.name;
           if (typeof currentName !== "string" || currentName.trim() === "") {
@@ -127,12 +146,10 @@ export default function VotePage() {
           }
         };
 
-        // Increment new selection
         const nextCount = getVotes(optionId) + 1;
         updates[`${optionId}.votes`] = nextCount;
         ensureName(optionId);
 
-        // Decrement previous only if > 0
         if (previousId) {
           const prevCount = getVotes(previousId);
           const newPrev = prevCount > 0 ? prevCount - 1 : 0;
@@ -165,40 +182,38 @@ export default function VotePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-4">
-      <header className="text-center mb-8">
-        <div className="text-4xl font-bold text-[#FFE478] mb-2">FSN</div>
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-sm uppercase tracking-wider text-red-500 font-bold">EL RITO</span>
-          <h1 className="text-3xl font-bold">Votación de outfit</h1>
+    <main className="min-h-screen text-white px-6 py-8 mb-24">
+      <div className="max-w-6xl mx-auto flex flex-col gap-8">
+        <header className="text-center space-y-3">
+          <Logo>
+            <h1>FSN</h1>
+          </Logo>
+          <h2 className="text-4xl font-bold mt-6 uppercase [text-shadow:2px_2px_8px_rgba(0,0,0,0.9)]">
+            Votación de Outfit
+          </h2>
+          <p className="text-xl text-white font-semibold max-w-2xl mx-auto [text-shadow:1px_1px_4px_rgba(0,0,0,0.8)]">
+            Votos totales: {totalVotes}
+          </p>
+        </header>
+
+        <div className={`flex items-center justify-center gap-2 p-4 rounded-xl border border-white/20 bg-black/40 backdrop-blur-sm ${
+          syncState === "connecting" ? "border-yellow-500/30" :
+          syncState === "syncing" ? "border-blue-500/30" :
+          "border-green-500/30"
+        }`}>
+          <span className={`inline-block w-2 h-2 rounded-full ${
+            syncState === "connecting" ? "bg-yellow-500 animate-pulse" :
+            syncState === "syncing" ? "bg-blue-500 animate-pulse" :
+            "bg-green-500"
+          }`} aria-hidden />
+          <span className="text-xl font-semibold">{statusMessage}</span>
         </div>
-      </header>
 
-      <div className="text-center mb-4">
-        <h1 className="text-2xl font-bold">Votos registrados: {totalVotes}</h1>
-      </div>
-
-      <h3></h3>
-
-      <div className={`flex items-center justify-center gap-2 mb-6 p-3 rounded-lg ${
-        syncState === "connecting" ? "bg-yellow-900/30" :
-        syncState === "syncing" ? "bg-blue-900/30" :
-        "bg-green-900/30"
-      }`}>
-        <span className={`inline-block w-2 h-2 rounded-full ${
-          syncState === "connecting" ? "bg-yellow-500 animate-pulse" :
-          syncState === "syncing" ? "bg-blue-500 animate-pulse" :
-          "bg-green-500"
-        }`} aria-hidden />
-        <span>{statusMessage}</span>
-      </div>
-
-      <main className="max-w-6xl mx-auto">
-        <p className="text-center mb-8 text-lg">
-          Elegí a un participante para apoyarlo con su outfit/makeup. Podrás cambiar tu voto antes de que cierre la votación. Evitá elegir solo porque es de tu equipo, votá por el que más de guste y reconozcamos su esfuerzo 😉. El ganador se lleva 5 puntos al equipo.
+        <p className="text-center text-2xl font-semibold text-white max-w-3xl mx-auto [text-shadow:1px_1px_4px_rgba(0,0,0,0.8)]">
+          Votá por tu outfit favorito. Podés cambiar tu voto en cualquier momento. El ganador suma 15 puntos para su equipo.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {(showResults
             ? [...PARTICIPANT_IDS].sort(
                 (a, b) => (votesMap[b as string] ?? 0) - (votesMap[a as string] ?? 0)
@@ -209,36 +224,50 @@ export default function VotePage() {
             const count = Math.max(0, Number(votesMap[id] ?? 0));
             const name = nameMap[id] ?? id;
             const desc = descMap[id] ?? "";
+            const imageUrl = imageUrls[id];
             const index = PARTICIPANT_IDS.indexOf(id);
-            const badge = `Participante ${index >= 0 ? index + 1 : ""}`;
+            const badge = `#${index >= 0 ? index + 1 : ""}`;
             return (
               <button
                 key={id}
                 type="button"
-                className={`flex flex-col p-6 rounded-xl border-2 transition-all ${
+                className={`flex flex-col rounded-2xl border-2 transition-all duration-300 overflow-hidden ${
                   isSelected
-                    ? "border-[#FFE478] bg-[#FFE478]/10 shadow-lg shadow-[#FFE478]/20"
-                    : "border-white/30 bg-white/5 hover:border-white/50 hover:bg-white/10"
-                } ${syncState === "syncing" ? "opacity-50 cursor-wait" : "cursor-pointer"}`}
+                    ? "border-white/60 bg-white/10 shadow-2xl"
+                    : "border-white/20 bg-black/40 hover:border-white/40 hover:bg-black/60"
+                } ${syncState === "syncing" ? "opacity-50 cursor-wait" : "cursor-pointer"} backdrop-blur-sm`}
                 onClick={() => handleVote(id)}
                 disabled={syncState === "syncing"}
               >
-                <div className="mb-3">
-                  <span className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider bg-red-600 rounded-full mb-2">{badge}</span>
-                  <h2 className="text-xl font-bold">{name}</h2>
-                </div>
-                <p className="text-sm text-gray-300 mb-4 flex-1">{desc}</p>
-                {showResults && (
-                  <div className="text-lg font-bold text-[#FFE478] mb-2">{count} votos</div>
+                {imageUrl && (
+                  <div className="relative w-full aspect-square">
+                    <Image
+                      src={imageUrl}
+                      alt={name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover"
+                    />
+                  </div>
                 )}
-                <div className="text-sm font-semibold mt-auto pt-3 border-t border-white/20">
-                  {isSelected ? "Seleccion actual" : "Elegir participante"}
+                <div className="p-4 flex flex-col gap-2 relative">
+                  {isSelected && <div className="absolute top-2 right-2 text-2xl">✅</div>}
+                  <div className="flex items-center justify-center">
+                    <span className="inline-block px-3 py-1 text-sm font-bold uppercase tracking-wider text-black bg-[#FFE478] rounded-full border border-[#FFE478]/50">Participante {badge}</span>
+                  </div>
+                  <h3 className="text-xl font-bold uppercase [text-shadow:1px_1px_4px_rgba(0,0,0,0.8)]">{name}</h3>
+                  {desc && <p className="text-sm text-white/80 [text-shadow:1px_1px_2px_rgba(0,0,0,0.8)]">{desc}</p>}
+                  {showResults && (
+                    <div className="text-lg font-bold text-white mt-2 pt-2 border-t border-white/20">
+                      {count} {count === 1 ? "voto" : "votos"}
+                    </div>
+                  )}
                 </div>
               </button>
             );
           })}
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
