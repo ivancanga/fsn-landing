@@ -143,7 +143,7 @@ export default function AdminPage() {
     setSaving(true);
     try {
       const docRef = doc(db, "votation", "current");
-      const updates: Record<string, unknown> = {
+      const updates: Record<string, string | number | boolean> = {
         mostrarResultados: showResults,
       };
 
@@ -157,7 +157,7 @@ export default function AdminPage() {
 
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        await updateDoc(docRef, updates);
+        await updateDoc(docRef, updates as Record<string, unknown>);
       } else {
         await setDoc(docRef, updates);
       }
