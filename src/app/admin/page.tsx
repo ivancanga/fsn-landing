@@ -157,7 +157,7 @@ export default function AdminPage() {
 
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        await updateDoc(docRef, updates as Record<string, unknown>);
+        await updateDoc(docRef, updates as { [x: string]: string | number | boolean });
       } else {
         await setDoc(docRef, updates);
       }
