@@ -44,7 +44,7 @@
   {
     "nombre": "Ángel",
     "tipo": "aldeano",
-    "habilidad": "👼 Al ser eliminado, sigue participando en el juego sin poder hablar, dos noches más tarde, regresa de la muerte como aldeano común.",
+    "habilidad": "👼 Al ser eliminado, sigue participando en el juego sin poder hablar ni emitir sonidos, dos noches más tarde, regresa de la muerte como aldeano común, sin poder hablar ni emitir sonidos.",
     "foto": "/lobos/angel.jpg"
   },
   {

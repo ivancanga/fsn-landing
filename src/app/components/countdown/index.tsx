@@ -6,9 +6,31 @@ import Link from "next/link";
 const Countdown = () => {
   const [timeLeft, setTimeLeft] = useState<string>("");
   const [hasEventStarted, setHasEventStarted] = useState(false);
+  const [hasRegistered, setHasRegistered] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const targetDate = new Date("2026-01-17T12:00:00");
+    const checkRegistration = () => {
+      const checkedIn = sessionStorage.getItem("hasCheckedIn");
+      setHasRegistered(checkedIn === "true");
+    };
+
+    // Check on mount
+    checkRegistration();
+
+    // Listen for storage changes
+    window.addEventListener("storage", checkRegistration);
+
+    // Also check periodically in case storage event doesn't fire
+    const interval = setInterval(checkRegistration, 1000);
+
+    return () => {
+      window.removeEventListener("storage", checkRegistration);
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    const targetDate = new Date("2026-01-15T12:00:00");
 
     const updateCountdown = () => {
       const now = new Date();
@@ -39,12 +61,23 @@ const Countdown = () => {
           <div className="mt-4 text-5xl">🍹🃏☀️</div>
         </>
       ) : (
-        <Link
-          href="/checkin"
-          className="mt-10 px-10 py-5 rounded-full bg-[#FFE478] text-black font-extrabold text-3xl shadow-lg shadow-black/40 uppercase no-underline inline-block"
-        >
-          Hacer check-in
-        </Link>
+        hasRegistered !== null && (
+          hasRegistered ? (
+            <Link
+              href="/teams"
+              className="mt-10 px-10 py-5 rounded-full bg-[#FFE478] text-black font-extrabold text-3xl shadow-lg shadow-black/40 uppercase no-underline inline-block"
+            >
+              Equipos
+            </Link>
+          ) : (
+            <Link
+              href="/checkin"
+              className="mt-10 px-10 py-5 rounded-full bg-[#FFE478] text-black font-extrabold text-3xl shadow-lg shadow-black/40 uppercase no-underline inline-block"
+            >
+              Hacer check-in
+            </Link>
+          )
+        )
       )}
     </div>
   );
