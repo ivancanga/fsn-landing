@@ -170,14 +170,15 @@ export default function TeamsPage() {
 
   return (
     <main className="min-h-screen text-white px-6 mb-24">
-      <div className="max-w-6xl mx-auto flex flex-col gap-8">
+      {/* Layout mobile y tablet */}
+      <div className="max-w-6xl mx-auto flex flex-col gap-8 lg:hidden">
         <header className="text-center space-3">
           <Logo>
             <h1>FSN</h1>
           </Logo>
         </header>
 
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-6">
           {sortedTeams.map((team) => (
             <section
               key={team.id}
@@ -196,6 +197,39 @@ export default function TeamsPage() {
               </div>
               <div className="mt-3 text-center">
                 <p className="text-4xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{scoresByTeam[team.id]} puntos</p>
+              </div>
+            </section>
+          ))}
+        </div>
+      </div>
+
+      {/* Layout desktop: una fila por equipo, ancho completo */}
+      <div className="hidden lg:block max-w-7xl mx-auto mt-8">
+        <div className="flex flex-col gap-6">
+          {sortedTeams.map((team) => (
+            <section
+              key={team.id}
+              className={`rounded-3xl border border-white/20 bg-gradient-to-r ${team.gradient} bg-opacity-80 p-6 shadow-2xl overflow-hidden`}
+            >
+              <div className="flex items-center gap-8">
+                {/* Info del equipo - izquierda */}
+                <div className="flex-shrink-0 w-64">
+                  <p className="text-2xl font-bold uppercase tracking-wider text-white mb-2">{team.label}</p>
+                  <span className="text-sm uppercase tracking-wider text-white/80">
+                    {playersByTeam[team.id]?.length ?? 0} jugadores
+                  </span>
+                </div>
+
+                {/* Carrusel de jugadores - centro */}
+                <div className="flex-1 h-64">
+                  <TeamCarousel players={playersByTeam[team.id] ?? []} />
+                </div>
+
+                {/* Puntaje - derecha */}
+                <div className="flex-shrink-0 w-64 text-center">
+                  <p className="text-8xl font-bold drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] leading-none">{scoresByTeam[team.id]}</p>
+                  <p className="text-2xl font-bold uppercase tracking-wider text-white/90 mt-2">puntos</p>
+                </div>
               </div>
             </section>
           ))}

@@ -15,6 +15,14 @@ const PARTICIPANT_IDS = [
   "participante4",
 ] as const;
 
+const TEAM_IDS = ["rojo", "azul", "verde", "amarillo"] as const;
+const TEAM_COLORS = {
+  rojo: "#ef4444",
+  azul: "#3b82f6",
+  verde: "#22c55e",
+  amarillo: "#facc15",
+};
+
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
@@ -23,6 +31,13 @@ export default function AdminPage() {
   const [uploading, setUploading] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+  const [teamScores, setTeamScores] = useState<Record<string, number>>({
+    rojo: 0,
+    azul: 0,
+    verde: 0,
+    amarillo: 0,
+  });
+  const [savingScores, setSavingScores] = useState(false);
 
   useEffect(() => {
     const storedAuth = sessionStorage.getItem("adminAuth");
@@ -35,6 +50,7 @@ export default function AdminPage() {
     if (isAuthenticated) {
       loadData();
       loadImages();
+      loadTeamScores();
     }
   }, [isAuthenticated]);
 
@@ -73,6 +89,25 @@ export default function AdminPage() {
       }
     }
     setImageUrls(urls);
+  };
+
+  const loadTeamScores = async () => {
+    try {
+      const scores: Record<string, number> = {};
+      for (const teamId of TEAM_IDS) {
+        const teamRef = doc(db, "teams", teamId);
+        const teamSnap = await getDoc(teamRef);
+        if (teamSnap.exists()) {
+          const data = teamSnap.data();
+          scores[teamId] = data.score || 0;
+        } else {
+          scores[teamId] = 0;
+        }
+      }
+      setTeamScores(scores);
+    } catch (error) {
+      console.error("Error loading team scores:", error);
+    }
   };
 
   const handleLogin = (e: React.FormEvent) => {
@@ -168,6 +203,24 @@ export default function AdminPage() {
       alert("Error al guardar los datos");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleSaveScores = async () => {
+    setSavingScores(true);
+    try {
+      for (const teamId of TEAM_IDS) {
+        const teamRef = doc(db, "teams", teamId);
+        await updateDoc(teamRef, {
+          score: teamScores[teamId] || 0,
+        });
+      }
+      alert("Puntajes guardados exitosamente");
+    } catch (error) {
+      console.error("Error saving scores:", error);
+      alert("Error al guardar los puntajes");
+    } finally {
+      setSavingScores(false);
     }
   };
 
@@ -337,6 +390,35 @@ export default function AdminPage() {
         >
           {saving ? "Guardando..." : "Guardar cambios"}
         </button>
+
+        <div className="mt-12 bg-black/40 backdrop-blur-sm border border-white/20 rounded-2xl p-6 shadow-xl">
+          <h3 className="text-2xl font-bold mb-6 uppercase">Puntajes de Equipos</h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {TEAM_IDS.map((teamId) => (
+              <div key={teamId} className="bg-black/60 border border-white/20 rounded-xl p-4">
+                <label className="block text-sm font-semibold mb-2 capitalize" style={{ color: TEAM_COLORS[teamId] }}>
+                  Equipo {teamId}
+                </label>
+                <input
+                  type="number"
+                  value={teamScores[teamId] || 0}
+                  onChange={(e) => setTeamScores(prev => ({ ...prev, [teamId]: parseInt(e.target.value) || 0 }))}
+                  className="w-full px-4 py-2 bg-black/60 border border-white/20 rounded-xl text-white text-2xl font-bold text-center focus:outline-none focus:border-white/40"
+                  min="0"
+                />
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={handleSaveScores}
+            disabled={savingScores}
+            className="mt-6 px-8 py-4 bg-blue-600/80 hover:bg-blue-600 border border-blue-400/30 rounded-xl font-bold text-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {savingScores ? "Guardando..." : "Guardar puntajes"}
+          </button>
+        </div>
       </div>
     </main>
   );
